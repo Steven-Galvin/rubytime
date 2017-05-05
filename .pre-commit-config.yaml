@@ -1,0 +1,23 @@
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    sha: v0.7.1
+    hooks:
+    -   id: trailing-whitespace
+    -   id: check-byte-order-marker
+-   repo: git://github.com/pre-commit/mirrors-eslint
+    sha: '7974644923f4d7cb08efd5410a1b6f3d3a6cb2b5'
+    hooks:
+    -   id: eslint
+-   repo: git://github.com/pre-commit/mirrors-csslint
+    sha: '818b64c6bf19ca1e089b4dabc8dc74059b405814'
+    hooks:
+    -   id: csslint
+-   repo: https://github.com/jordant/rubocop-pre-commit-hook.git
+    sha: 'ae431551f703fff928bfabe2b440a9a8048e962b'
+    hooks:
+    -   id: check-rubocop
+-   repo: https://github.com/chriskuehl/puppet-pre-commit-hooks.git
+    sha: '67c9ecc7ffee0feb391b7ff921e340d014533a15'
+    hooks:
+    -   id: erb-validate
+        args:
+        -   --fail-on-warnings
