@@ -1,0 +1,16 @@
+<h3><%= @volunteer.name %></h3>
+<h3><%= @volunteer.project.name %>
+<form action="/volunteer/<%= @volunteer.id %>" method="patch">
+  <label for="volunteer[name]">Volunteer Name</label>
+  <input type="text" name="volunteer[name]">
+  <label for="volunteer[project_id]">Project</label>
+  <select>
+    <% @projects.each do |project| %>
+    <option value="<%= project.id %>"><%= project.name %></option>
+    <% end %>
+  </select>
+  <button type="submit" class="btn btn-default">Edit Volunteer</button>
+</form>
+<form action="/volunteer/<%= @volunteer.id %>" method="delete">
+  <button type="submit" class="btn btn-default">Delete Volunteer</button>
+</form>
