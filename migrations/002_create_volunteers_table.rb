@@ -3,7 +3,6 @@ Sequel.migration do
     create_table(:volunteers) do
       primary_key :id
       String :name, null: false
-      String :description, null: false
       Time :created, null: false
       Time :modified
     end

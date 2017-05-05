@@ -1,8 +1,10 @@
 $LOAD_PATH.unshift('./')
 
 require 'sequel'
+require 'pg'
 require 'app'
 require 'dotenv'
+require_relative './lib/rubytime'
 
 Dotenv.load
 
