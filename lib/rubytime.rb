@@ -10,8 +10,9 @@ module Rubytime
     end
 
     def columns
-      @columns ||= @conn.exec('select column_name from'\
+      @columns ||= @conn.exec('select column_name from '\
         "information_schema.columns where table_name='#{@table}';")
+                        .values.flatten.map(&:to_sym)
     end
 
     def where(conditions, options = {})
@@ -34,12 +35,12 @@ module Rubytime
     end
 
     def save(args)
-      savedata = args.select { |k, _v| columns.include?(k) }
-      savedata[:created] = Time.now if columns.include?('created')
-      sql = "INSERT INTO #{@table} (#{args.keys.join(',')} VALUES ("
-      1.upto(savedata.size) { |i| sql += "$#{i}, " }
-      sql += ') returning id;'
-      @conn.exec_params(sql, savedata)
+      savedata = args.select { |k, _| columns.include?(k) }
+      savedata[:created] = Time.now if columns.include?(:created)
+      nums = 1.upto(savedata.size).map { |i| "$#{i}" }.join(', ')
+      sql = "INSERT INTO #{@table} (#{savedata.keys.join(', ')}) "\
+      "VALUES (#{nums}) returning id;"
+      @conn.exec_params(sql, savedata.values)
     end
 
     def delete(id)

@@ -30,6 +30,9 @@ class RubytimeApp < Sinatra::Application
   end
 
   post('/volunteers/new') do
+    data = params.symbolize.fetch(:volunteer)
+    @v_model.save(data)
+    redirect('/volunteers')
   end
 
   get('/volunteers/:id') do
@@ -57,6 +60,9 @@ class RubytimeApp < Sinatra::Application
   end
 
   post('/projects/new') do
+    data = params.symbolize.fetch(:project)
+    @p_model.save(data)
+    redirect('/projects')
   end
 
   get('/projects/:id') do
