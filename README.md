@@ -27,6 +27,7 @@ Then you can create the necessary tables by running:
 
     $ sudo -u postgres psql -d postgres -f ./scripts/create_databases.sql
     $ rake db:migrate
+    $ RACK_ENV='test' rake db:migrate
 
 You will also need to edit the env.example file to contain the correct username and password for your postgres users, and rename it to `.env`.
 
