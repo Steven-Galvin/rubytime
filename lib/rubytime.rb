@@ -6,32 +6,67 @@ module Rubytime
   class DBO
     def initialize(table_name)
       @table = table_name
-      @conn = ::DB
+      @conn = Rubytime::DB
+    end
+
+    def exec(sql)
+      @conn.exec(sql)
+    end
+
+    def exec_params(sql, params)
+      @conn.exec_params(sql, params)
     end
 
     def columns
-      @columns ||= @conn.exec('select column_name from '\
+      @columns ||= exec('select column_name from '\
         "information_schema.columns where table_name='#{@table}';")
-                        .values.flatten.map(&:to_sym)
+                   .values.flatten.map(&:to_sym)
     end
 
-    def where(conditions, options = {})
-      sql = "SELECT * FROM #{@table}"
-      if options[:include]
-        sql += "LEFT JOIN #{options[:include]} AS t2 ON ("\
-          "#{@table}.id = t2.#{@table.chop}_id) "
+    # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
+    def where(conditions = {})
+      options = {
+        conditions: conditions,
+        fields: ['*']
+      }
+      if conditions.key?(:conditions)
+        options = {
+          conditions: {},
+          fields: ['*']
+        }.merge(conditions)
       end
-      sql += "WHERE '#{conditions}';"
-      @conn.exec(sql)
+      fields = options[:fields].join(', ')
+      sql = "SELECT #{fields} FROM #{@table} "
+      sql << p_include(options[:p_include]).to_s
+      sql << c_include(options[:c_include]).to_s
+      unless options[:conditions].empty?
+        sql << 'WHERE ' + conditions(options[:conditions]).to_s
+      end
+      exec(sql.rstrip + ';')
+    end
+
+    def p_include(other)
+      other && "LEFT JOIN #{other} AS parent ON ("\
+        "#{@table}.#{other.to_s.chop}_id = parent.id) "
+    end
+
+    def c_include(other)
+      other && "LEFT JOIN #{other} AS child ON ("\
+        "#{@table}.id = child.#{@table.chop}_id) "
+    end
+
+    def conditions(hash)
+      hash.map { |k, v| "#{k} = '#{v}'" }.join(' AND')
     end
 
     def find_by(field, value)
       sql = "SELECT * FROM #{@table} WHERE #{field} = '#{value}';"
-      @conn.exec(sql)
+      exec(sql)
     end
 
     def all
-      @conn.exec("SELECT * FROM #{@table};")
+      exec("SELECT * FROM #{@table};")
     end
 
     def save(args)
@@ -40,17 +75,19 @@ module Rubytime
       nums = 1.upto(savedata.size).map { |i| "$#{i}" }.join(', ')
       sql = "INSERT INTO #{@table} (#{savedata.keys.join(', ')}) "\
       "VALUES (#{nums}) returning id;"
-      @conn.exec_params(sql, savedata.values)
+      exec_params(sql, savedata.values)
     end
 
     def delete(id)
-      sql = "DELETE FROM #{@table} WHERE id = #{id}"
-      @conn.exec(sql)
+      sql = "DELETE FROM #{@table} WHERE id = #{id};"
+      exec(sql)
     end
 
     def update(id, new_data)
-      sql = "UPDATE #{@table} SET #{new_data} WHERE id = #{id}"
-      @conn.exec(sql)
+      new_data[:modified] = Time.now if columns.include?(:modified)
+      pairs = new_data.map { |k, v| "#{k} = '#{v}'" }.join(', ')
+      sql = "UPDATE #{@table} SET #{pairs} WHERE id = #{id};"
+      exec(sql)
     end
   end
 
