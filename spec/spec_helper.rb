@@ -2,9 +2,11 @@ ENV['RACK_ENV'] = 'test'
 
 require 'bundler/setup'
 require_relative '../boot'
+require_relative 'support/helpers'
 require 'lib/tasks/db'
 require 'database_cleaner'
 require 'timecop'
+require 'rspec'
 
 # this is necessary for the database cleaner not to fall over.
 Sequel.connect(ENV['DATABASE_URL_TEST'])
@@ -12,6 +14,8 @@ Sequel.connect(ENV['DATABASE_URL_TEST'])
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
+
+  config.include RubytimeHelper, type: :feature
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
