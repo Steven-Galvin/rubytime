@@ -15,6 +15,10 @@ class RubytimeApp < Sinatra::Application
     @p_model = Rubytime::Project.new
   end
 
+  def params
+    super.symbolize
+  end
+
   get('/') do
     erb(:index)
   end
@@ -30,29 +34,34 @@ class RubytimeApp < Sinatra::Application
   end
 
   post('/volunteers/new') do
-    data = params.symbolize.fetch(:volunteer)
+    data = params.fetch(:volunteer)
     @v_model.save(data)
     redirect('/volunteers')
   end
 
   get('/volunteers/:id') do
-    id = params.symbolize.fetch(:id)
-    @volunteer = @v_model.where(id: id, include: :project)
+    id = params.fetch(:id)
+    @projects = @p_model.all
+    @volunteer = @v_model.where({ id: id }, a_include: :projects)
     erb(:volunteer)
   end
 
-  patch('/volunteers/:id') do
-    id = params.symbolize.fetch(:id)
-    @v_model.update(id: id)
+  put('/volunteers/:id') do
+    id = params.fetch(:id)
+    data = params.fetch(:volunteer)
+    @v_model.update(id, data)
+    redirect('/volunteers/' + id)
   end
 
   delete('/volunteers/:id') do
-    id = params.symbolize.fetch(:id)
-    @v_model.delete(id: id)
+    id = params.fetch(:id)
+    @v_model.delete(id)
+    redirect('/volunteers')
   end
 
   get('/projects') do
     @projects = @p_model.all
+    erb(:projects)
   end
 
   get('/projects/new') do
@@ -60,24 +69,27 @@ class RubytimeApp < Sinatra::Application
   end
 
   post('/projects/new') do
-    data = params.symbolize.fetch(:project)
+    data = params.fetch(:project)
     @p_model.save(data)
     redirect('/projects')
   end
 
   get('/projects/:id') do
-    id = params.symbolize.fetch(:id)
+    id = params.fetch(:id)
     @project = @p_model.where(id: id)
     erb(:project)
   end
 
-  patch('/projects/:id') do
-    id = params.symbolize.fetch(:id)
-    @v_model.update(id: id)
+  put('/projects/:id') do
+    id = params.fetch(:id)
+    data = params.fetch(:project)
+    @p_model.update(id, data)
+    redirect('/projects/' + id)
   end
 
   delete('/projects/:id') do
-    id = params.symbolize.fetch(:id)
-    @v_model.delete(id: id)
+    id = params.fetch(:id)
+    @p_model.delete(id)
+    redirect('/projects')
   end
 end
