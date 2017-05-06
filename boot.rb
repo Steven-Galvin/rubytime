@@ -12,4 +12,4 @@ env = ENV['RACK_ENV'] || 'development'
 
 connection_string = ENV['DATABASE_URL'] || ENV["DATABASE_URL_#{env.upcase}"]
 
-DB = PG::Connection.open(connection_string)
+Rubytime::DB = PG::Connection.open(connection_string)
