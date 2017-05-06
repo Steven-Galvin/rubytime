@@ -1,5 +1,10 @@
-<form target="/volunteer/new" method="post">
+<form action="/volunteers/new" method="post">
   <label for="volunteer[name]">Volunteer Name</label>
   <input type="text" name="volunteer[name]">
-  <button type="submit" class="btn btn-default">New volunteer</button>
-</form>
+  <label for="volunteer[project_id]">Project</label>
+  <select>
+    <% @projects.each do |project| %>
+    <option value="<%= project['id'] %>"><%= project['title'] %></option>
+    <% end %>
+  </select>
+  <button type="submit" class="btn btn-default">New Volunteer</button>

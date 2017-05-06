@@ -42,7 +42,8 @@ class RubytimeApp < Sinatra::Application
   get('/volunteers/:id') do
     id = params.fetch(:id)
     @projects = @p_model.all
-    @volunteer = @v_model.where({ id: id }, a_include: :projects)
+    c = { 'volunteers.id'.to_sym => id }
+    @volunteer = @v_model.where(conditions: c, p_include: :projects)
     erb(:volunteer)
   end
 

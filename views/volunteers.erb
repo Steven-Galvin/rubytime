@@ -1,0 +1,5 @@
+<ul>
+  <% @volunteers.each do |volunteer| %>
+    <li class="volunteer"><a href="/volunteers/<%= volunteer["id"] %>"><%= volunteer["name"] %></a></li>
+  <% end %>
+</ul>

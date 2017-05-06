@@ -1,16 +1,18 @@
-<h3><%= @volunteer.name %></h3>
-<h3><%= @volunteer.project.name %>
-<form action="/volunteer/<%= @volunteer.id %>" method="patch">
+<h3><%= @volunteer[0]['name'] %></h3>
+<h4>Project: <%= @volunteer[0]['title'] %></h4>
+<form id="edit" action="/volunteers/<%= @volunteer.getvalue(0,0) %>" method="post">
+  <input type="hidden" name="_method" value="put">
   <label for="volunteer[name]">Volunteer Name</label>
   <input type="text" name="volunteer[name]">
   <label for="volunteer[project_id]">Project</label>
-  <select>
+  <select name="volunteer[project_id]">
     <% @projects.each do |project| %>
-    <option value="<%= project.id %>"><%= project.name %></option>
+    <option value="<%= project['id'] %>"><%= project['title'] %></option>
     <% end %>
   </select>
   <button type="submit" class="btn btn-default">Edit Volunteer</button>
 </form>
-<form action="/volunteer/<%= @volunteer.id %>" method="delete">
+<form id="delete" action="/volunteers/<%= @volunteer.getvalue(0,0) %>" method="post">
+  <input type="hidden" name="_method" value="delete">
   <button type="submit" class="btn btn-default">Delete Volunteer</button>
 </form>
