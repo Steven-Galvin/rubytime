@@ -4,6 +4,7 @@ gem 'dotenv'
 gem 'pg'
 gem 'pry'
 gem 'pry-byebug'
+gem 'rake'
 gem 'sequel' # only used for database migrations
 gem 'sinatra'
 gem 'sinatra-flash'
