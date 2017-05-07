@@ -33,6 +33,14 @@ You will also need to edit the env.example file to contain the correct username 
 
 Finally, start the app by running `rackup`.
 
+## Heroku Deployment
+
+The app is currently live on Heroku [here.](https://dry-brushlands-71318.herokuapp.com/)
+
+## API Documentation
+
+The ORM bits of this project are live on [Github Pages.](https://tenebrousedge.github.io/rubytime)
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -41,7 +49,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rubytime.
+Bug reports and pull requests are welcome on GitHub at https://github.com/tenebrousedge/rubytime.
 
 
 ## License
